@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DigitalResult — Agence Web & Data</title>
+  <style>
+    :root {
+      --bg: #04060f;
+      --accent: #5b8dee;
+      --accent2: #8b5cf6;
+      --cyan: #06b6d4;
+      --green: #10b981;
+      --text: #f0f2ff;
+      --muted: #7b85b0;
+      --card: rgba(255,255,255,.04);
+      --border: rgba(255,255,255,.08);
+    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+    body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;overflow-x:hidden;}
+
+    /* ── CANVAS BG ── */
+    #bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;}
+
+    /* ── NAV ── */
+    nav{
+      position:fixed;top:0;left:0;right:0;z-index:100;
+      display:flex;align-items:center;justify-content:space-between;
+      padding:0 6%;height:68px;
+      background:rgba(4,6,15,.7);backdrop-filter:blur(20px);
+      border-bottom:1px solid var(--border);
+    }
+    .logo{font-size:1.35rem;font-weight:900;letter-spacing:-1px;
+      background:linear-gradient(90deg,var(--accent),var(--cyan));
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+    .nav-links{display:flex;gap:2rem;list-style:none;}
+    .nav-links a{color:var(--muted);text-decoration:none;font-size:.9rem;transition:.2s;}
+    .nav-links a:hover{color:#fff;}
+    .nav-cta{
+      background:linear-gradient(135deg,var(--accent),var(--accent2));
+      color:#fff;padding:.5rem 1.4rem;border-radius:50px;
+      text-decoration:none;font-weight:700;font-size:.88rem;
+      box-shadow:0 4px 20px rgba(91,141,238,.35);transition:.2s;
+    }
+    .nav-cta:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(91,141,238,.5);}
+
+    /* ── HERO ── */
+    .hero{
+      position:relative;z-index:1;
+      min-height:100vh;display:flex;flex-direction:column;
+      align-items:center;justify-content:center;text-align:center;
+      padding:8rem 6% 5rem;
+    }
+    .hero-eyebrow{
+      display:inline-flex;align-items:center;gap:.6rem;
+      background:rgba(91,141,238,.1);border:1px solid rgba(91,141,238,.25);
+      border-radius:50px;padding:.45rem 1.2rem;font-size:.82rem;
+      color:var(--accent);margin-bottom:2rem;letter-spacing:.06em;font-weight:600;
+    }
+    .hero-eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--cyan);animation:blink 2s infinite;}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+    .hero h1{
+      font-size:clamp(2.6rem,7vw,5.5rem);font-weight:900;line-height:1.05;
+      letter-spacing:-2px;margin-bottom:1.5rem;
+    }
+    .hero h1 .line1{display:block;color:var(--text);}
+    .hero h1 .line2{
+      display:block;
+      background:linear-gradient(90deg,var(--accent),var(--cyan),var(--accent2));
+      background-size:200%;
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+      animation:shimmer 4s linear infinite;
+    }
+    @keyframes shimmer{0%{background-position:0%}100%{background-position:200%}}
+    .hero-sub{font-size:1.1rem;color:var(--muted);max-width:580px;line-height:1.75;margin-bottom:3rem;}
+    .hero-actions{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin-bottom:4rem;}
+    .btn-glow{
+      background:linear-gradient(135deg,var(--accent),var(--accent2));
+      color:#fff;padding:.9rem 2.2rem;border-radius:50px;
+      text-decoration:none;font-weight:700;font-size:1rem;
+      box-shadow:0 0 30px rgba(91,141,238,.4);transition:.3s;border:none;cursor:pointer;
+    }
+    .btn-glow:hover{transform:translateY(-3px);box-shadow:0 0 50px rgba(91,141,238,.6);}
+    .btn-ghost{
+      border:1px solid var(--border);color:var(--text);
+      padding:.9rem 2.2rem;border-radius:50px;text-decoration:none;
+      font-weight:600;font-size:1rem;transition:.3s;background:rgba(255,255,255,.03);
+    }
+    .btn-ghost:hover{border-color:rgba(91,141,238,.5);background:rgba(91,141,238,.06);}
+
+    /* METRICS STRIP */
+    .metrics{
+      display:flex;gap:2px;flex-wrap:wrap;justify-content:center;
+    }
+    .metric{
+      background:rgba(255,255,255,.03);border:1px solid var(--border);
+      border-radius:16px;padding:1.2rem 2rem;text-align:center;min-width:140px;
+    }
+    .metric strong{display:block;font-size:2rem;font-weight:900;
+      background:linear-gradient(135deg,var(--accent),var(--cyan));
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+    .metric span{color:var(--muted);font-size:.8rem;}
+
+    /* ── SECTION BASE ── */
+    section{position:relative;z-index:1;padding:7rem 6%;}
+    .label{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.18em;color:var(--accent);margin-bottom:.6rem;text-align:center;}
+    h2.section-title{text-align:center;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:900;letter-spacing:-1px;margin-bottom:.8rem;}
+    .section-desc{text-align:center;color:var(--muted);max-width:520px;margin:0 auto 4rem;line-height:1.75;font-size:.97rem;}
+
+    /* ── SERVICES ── */
+    .services-bg{background:linear-gradient(180deg,#04060f 0%,#070b1a 50%,#04060f 100%);}
+    .services-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:1.5rem;}
+    .svc{
+      background:var(--card);border:1px solid var(--border);border-radius:20px;
+      padding:2.2rem;position:relative;overflow:hidden;transition:.35s;
+      cursor:default;
+    }
+    .svc::before{
+      content:'';position:absolute;inset:0;border-radius:20px;
+      background:radial-gradient(circle at 30% 20%, rgba(91,141,238,.08) 0%, transparent 60%);
+      opacity:0;transition:.35s;
+    }
+    .svc:hover{border-color:rgba(91,141,238,.35);transform:translateY(-6px);box-shadow:0 24px 60px rgba(0,0,0,.4);}
+    .svc:hover::before{opacity:1;}
+    .svc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;}
+    .svc-icon-wrap{
+      width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;
+      font-size:1.5rem;
+    }
+    .svc-icon-wrap.blue{background:rgba(91,141,238,.15);}
+    .svc-icon-wrap.purple{background:rgba(139,92,246,.15);}
+    .svc-icon-wrap.green{background:rgba(16,185,129,.15);}
+    .svc-price{
+      font-size:.85rem;font-weight:800;padding:.35rem .9rem;border-radius:50px;
+    }
+    .svc-price.blue{background:rgba(91,141,238,.12);color:var(--accent);}
+    .svc-price.purple{background:rgba(139,92,246,.12);color:#a78bfa;}
+    .svc-price.green{background:rgba(16,185,129,.12);color:var(--green);}
+    .svc h3{font-size:1.15rem;font-weight:800;margin-bottom:.6rem;}
+    .svc p{color:var(--muted);font-size:.9rem;line-height:1.65;margin-bottom:1.4rem;}
+    .svc-features{display:flex;flex-direction:column;gap:.5rem;}
+    .svc-features li{
+      display:flex;align-items:center;gap:.6rem;
+      font-size:.85rem;color:var(--muted);list-style:none;
+    }
+    .svc-features li::before{content:'✓';color:var(--accent);font-weight:800;font-size:.9rem;}
+
+    /* ── DEMOS ── */
+    .demos-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:2rem;}
+    .demo-card{
+      border-radius:24px;overflow:hidden;border:1px solid var(--border);
+      background:var(--card);transition:.35s;
+    }
+    .demo-card:hover{transform:translateY(-8px);box-shadow:0 30px 70px rgba(0,0,0,.5);border-color:rgba(91,141,238,.3);}
+    .demo-thumb{
+      height:220px;position:relative;overflow:hidden;
+      display:flex;align-items:center;justify-content:center;
+    }
+    .demo-thumb img{width:100%;height:100%;object-fit:cover;transition:.5s;}
+    .demo-card:hover .demo-thumb img{transform:scale(1.08);}
+    .demo-thumb .overlay{
+      position:absolute;inset:0;
+      background:linear-gradient(0deg,rgba(4,6,15,.8) 0%,transparent 60%);
+    }
+    .demo-thumb .thumb-tag{
+      position:absolute;top:1rem;right:1rem;
+      background:rgba(4,6,15,.7);backdrop-filter:blur(10px);
+      border:1px solid var(--border);border-radius:50px;
+      padding:.3rem .8rem;font-size:.75rem;color:var(--text);
+    }
+    .demo-body{padding:1.8rem;}
+    .demo-body h3{font-size:1.1rem;font-weight:800;margin-bottom:.5rem;}
+    .demo-body p{color:var(--muted);font-size:.88rem;line-height:1.6;margin-bottom:1.4rem;}
+    .demo-link{
+      display:inline-flex;align-items:center;gap:.5rem;
+      background:linear-gradient(135deg,var(--accent),var(--accent2));
+      color:#fff;padding:.6rem 1.4rem;border-radius:50px;
+      text-decoration:none;font-size:.88rem;font-weight:700;transition:.2s;
+    }
+    .demo-link:hover{opacity:.85;gap:.8rem;}
+    .demo-link svg{width:14px;height:14px;}
+
+    /* ── PROCESS ── */
+    .process-bg{background:linear-gradient(180deg,#04060f,#07091a,#04060f);}
+    .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem;position:relative;}
+    .steps::before{
+      content:'';position:absolute;top:32px;left:10%;right:10%;height:1px;
+      background:linear-gradient(90deg,transparent,var(--accent),var(--cyan),transparent);
+      display:none;
+    }
+    .step{text-align:center;padding:2rem 1.5rem;background:var(--card);border:1px solid var(--border);border-radius:20px;transition:.3s;}
+    .step:hover{border-color:rgba(91,141,238,.3);}
+    .step-num{
+      width:52px;height:52px;border-radius:16px;margin:0 auto 1.2rem;
+      display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:900;
+      background:linear-gradient(135deg,var(--accent),var(--accent2));
+      box-shadow:0 8px 24px rgba(91,141,238,.3);
+    }
+    .step h3{font-size:1rem;font-weight:800;margin-bottom:.5rem;}
+    .step p{color:var(--muted);font-size:.85rem;line-height:1.6;}
+
+    /* ── CONTACT ── */
+    .contact-bg{background:linear-gradient(135deg,#070b1a,#0d0820);}
+    .contact-inner{
+      max-width:700px;margin:0 auto;
+      background:rgba(255,255,255,.03);border:1px solid var(--border);
+      border-radius:28px;padding:3rem;
+      box-shadow:0 0 80px rgba(91,141,238,.06);
+    }
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+    .fg{display:flex;flex-direction:column;gap:.45rem;margin-bottom:1.1rem;}
+    .fg label{font-size:.8rem;color:var(--muted);font-weight:700;letter-spacing:.05em;text-transform:uppercase;}
+    .fg input,.fg select,.fg textarea{
+      background:rgba(255,255,255,.04);border:1px solid var(--border);
+      border-radius:12px;padding:.8rem 1.1rem;color:var(--text);font-size:.93rem;
+      outline:none;transition:.25s;font-family:inherit;
+    }
+    .fg input:focus,.fg select:focus,.fg textarea:focus{
+      border-color:rgba(91,141,238,.5);
+      background:rgba(91,141,238,.06);
+      box-shadow:0 0 0 3px rgba(91,141,238,.12);
+    }
+    .fg select option{background:#0d1225;}
+    .fg textarea{resize:vertical;min-height:120px;}
+    .form-submit{
+      width:100%;padding:1.1rem;border-radius:14px;border:none;
+      background:linear-gradient(135deg,var(--accent),var(--accent2));
+      color:#fff;font-size:1rem;font-weight:800;cursor:pointer;font-family:inherit;
+      box-shadow:0 8px 30px rgba(91,141,238,.35);transition:.3s;
+      letter-spacing:.02em;
+    }
+    .form-submit:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(91,141,238,.5);}
+    .form-submit:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+    .form-success{display:none;text-align:center;padding:2.5rem;}
+    .form-success .check{font-size:3.5rem;display:block;margin-bottom:.8rem;}
+    .form-success strong{display:block;font-size:1.3rem;margin-bottom:.4rem;}
+    .form-success span{color:var(--muted);font-size:.92rem;}
+
+    /* ── CONTACT INFO ── */
+    .contact-info-bar{
+      display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;
+      margin-bottom:2.5rem;
+    }
+    .cinfo{
+      display:flex;align-items:center;gap:.7rem;
+      background:rgba(255,255,255,.04);border:1px solid var(--border);
+      border-radius:50px;padding:.6rem 1.2rem;font-size:.88rem;
+    }
+    .cinfo .ico{font-size:1.1rem;}
+    .cinfo a{color:var(--text);text-decoration:none;}
+    .cinfo a:hover{color:var(--accent);}
+
+    /* ── FOOTER ── */
+    footer{
+      position:relative;z-index:1;text-align:center;
+      padding:2.5rem 6%;border-top:1px solid var(--border);
+      color:var(--muted);font-size:.85rem;
+    }
+    .footer-logo{
+      font-size:1.2rem;font-weight:900;letter-spacing:-1px;margin-bottom:.5rem;
+      background:linear-gradient(90deg,var(--accent),var(--cyan));
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+      display:inline-block;
+    }
+
+    @media(max-width:640px){
+      .nav-links{display:none;}
+      .form-row{grid-template-columns:1fr;}
+      .metrics{gap:1rem;}
+      .metric{min-width:120px;}
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">DigitalResult</div>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#demos">Exemples</a></li>
+    <li><a href="#process">Processus</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Devis gratuit →</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow"><span class="dot"></span>Agence digitale — Sites · Facturation · Data</div>
+  <h1>
+    <span class="line1">Votre business,</span>
+    <span class="line2">propulsé par le digital.</span>
+  </h1>
+  <p class="hero-sub">DigitalResult crée des sites vitrines qui convertissent, automatise votre facturation et transforme vos données en tableaux de bord puissants.</p>
+  <div class="hero-actions">
+    <a href="#services" class="btn-glow">Découvrir nos offres</a>
+    <a href="#demos" class="btn-ghost">Voir les exemples →</a>
+  </div>
+  <div class="metrics">
+    <div class="metric"><strong>200€</strong><span>Site vitrine</span></div>
+    <div class="metric"><strong>15€</strong><span>/ facture ou devis</span></div>
+    <div class="metric"><strong>Sur devis</strong><span>Dashboard & KPI</span></div>
+    <div class="metric"><strong>48h</strong><span>Livraison moyenne</span></div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services" class="services-bg">
+  <div class="label">Nos offres</div>
+  <h2 class="section-title">Ce que nous créons pour vous</h2>
+  <p class="section-desc">Des solutions digitales sur mesure pour les indépendants, artisans et TPE/PME prêts à passer à la vitesse supérieure.</p>
+  <div class="services-grid">
+
+    <div class="svc">
+      <div class="svc-top">
+        <div class="svc-icon-wrap blue">🌐</div>
+        <span class="svc-price blue">200 €</span>
+      </div>
+      <h3>Site Vitrine</h3>
+      <p>Un site web professionnel, rapide et responsive qui présente votre activité et attire de nouveaux clients 24h/24.</p>
+      <ul class="svc-features">
+        <li>Design sur mesure & mobile-first</li>
+        <li>Formulaire de contact intégré</li>
+        <li>Optimisation SEO de base</li>
+        <li>Livraison sous 48–72h</li>
+      </ul>
+    </div>
+
+    <div class="svc">
+      <div class="svc-top">
+        <div class="svc-icon-wrap green">🧾</div>
+        <span class="svc-price green">15 € / doc</span>
+      </div>
+      <h3>Factures & Devis</h3>
+      <p>Des factures et devis PDF professionnels à vos couleurs, générés et envoyés rapidement sans abonnement.</p>
+      <ul class="svc-features">
+        <li>PDF professionnel à vos couleurs</li>
+        <li>Logo & mentions légales inclus</li>
+        <li>Envoi direct par email</li>
+        <li>Paiement à l'unité, sans engagement</li>
+      </ul>
+    </div>
+
+    <div class="svc">
+      <div class="svc-top">
+        <div class="svc-icon-wrap purple">📊</div>
+        <span class="svc-price purple">Sur devis</span>
+      </div>
+      <h3>Dashboard & KPI</h3>
+      <p>Transformez vos données brutes en tableaux de bord interactifs pour piloter votre activité en temps réel.</p>
+      <ul class="svc-features">
+        <li>Tableaux de bord sur mesure</li>
+        <li>Connexion à vos sources de données</li>
+        <li>KPIs, graphiques & alertes</li>
+        <li>Accès multi-utilisateurs</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- DEMOS -->
+<section id="demos">
+  <div class="label">Réalisations</div>
+  <h2 class="section-title">Exemples de sites créés</h2>
+  <p class="section-desc">Découvrez deux exemples concrets de sites vitrines réalisés par DigitalResult.</p>
+  <div class="demos-grid">
+
+    <div class="demo-card">
+      <div class="demo-thumb">
+        <img src="https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=800&auto=format&fit=crop&q=80" alt="Restaurant turc Istanbul Kebab" />
+        <div class="overlay"></div>
+        <span class="thumb-tag">🕌 Restaurant turc</span>
+      </div>
+      <div class="demo-body">
+        <h3>Istanbul Kebab — Restaurant Turc</h3>
+        <p>Site vitrine avec menu interactif, galerie photos, formulaire de réservation et présentation de l'équipe.</p>
+        <a href="restaurant-turc-demo.html" class="demo-link">Voir le site <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+    </div>
+
+    <div class="demo-card">
+      <div class="demo-thumb">
+        <img src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=800&auto=format&fit=crop&q=80" alt="Artisan plombier Martin Plomberie" />
+        <div class="overlay"></div>
+        <span class="thumb-tag">🔧 Artisan plombier</span>
+      </div>
+      <div class="demo-body">
+        <h3>Martin Plomberie — Artisan</h3>
+        <p>Site vitrine avec services, zone d'intervention, tarifs, bouton urgence 24h/7j et formulaire de devis.</p>
+        <a href="artisan-plombier-demo.html" class="demo-link">Voir le site <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="process" class="process-bg">
+  <div class="label">Notre méthode</div>
+  <h2 class="section-title">De l'idée à la mise en ligne</h2>
+  <p class="section-desc">Un processus simple, rapide et transparent — vous validez chaque étape.</p>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><h3>Échange & Devis</h3><p>On discute de votre projet et vos besoins. Devis gratuit sous 24h.</p></div>
+    <div class="step"><div class="step-num">2</div><h3>Conception</h3><p>On crée votre solution sur mesure : design, contenu, fonctionnalités.</p></div>
+    <div class="step"><div class="step-num">3</div><h3>Validation</h3><p>Vous validez le rendu, on intègre vos retours jusqu'à satisfaction.</p></div>
+    <div class="step"><div class="step-num">4</div><h3>Mise en ligne</h3><p>Déploiement et formation — vous êtes opérationnel en quelques heures.</p></div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="contact-bg">
+  <div class="label">Parlons de votre projet</div>
+  <h2 class="section-title">Demandez un devis gratuit</h2>
+  <p class="section-desc">Réponse garantie sous 24h. Aucun engagement.</p>
+
+  <div class="contact-info-bar">
+    <div class="cinfo"><span class="ico">📧</span><a href="mailto:digitalresult06@gmail.com">digitalresult06@gmail.com</a></div>
+    <div class="cinfo"><span class="ico">📱</span><a href="https://wa.me/33749317915">WhatsApp : +33 7 49 31 79 15</a></div>
+  </div>
+
+  <div class="contact-inner">
+    <form id="contactForm" action="https://formspree.io/f/xdabqopo" method="POST">
+      <div class="form-row">
+        <div class="fg"><label>Prénom & Nom</label><input type="text" name="nom" placeholder="Jean Dupont" required /></div>
+        <div class="fg"><label>Email</label><input type="email" name="email" placeholder="jean@exemple.com" required /></div>
+      </div>
+      <div class="form-row">
+        <div class="fg"><label>Téléphone</label><input type="tel" name="telephone" placeholder="06 12 34 56 78" /></div>
+        <div class="fg">
+          <label>Service souhaité</label>
+          <select name="service">
+            <option value="">Choisir un service</option>
+            <option>Site vitrine — 200€</option>
+            <option>Facture / Devis — 15€ l'unité</option>
+            <option>Dashboard & KPI — sur devis</option>
+            <option>Pack complet</option>
+          </select>
+        </div>
+      </div>
+      <div class="fg"><label>Décrivez votre projet</label><textarea name="message" placeholder="Parlez-nous de votre activité, vos besoins, vos objectifs..."></textarea></div>
+      <input type="hidden" name="_subject" value="🚀 Nouvelle demande de devis — DigitalResult" />
+      <button type="submit" class="form-submit">Envoyer ma demande →</button>
+    </form>
+    <div class="form-success" id="formSuccess">
+      <span class="check">✅</span>
+      <strong>Message envoyé !</strong>
+      <span>On vous répond dans les 24h.</span>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">DigitalResult</div>
+  <p>© 2026 DigitalResult · Agence web & data · Tous droits réservés</p>
+  <p style="margin-top:.3rem;">📧 digitalresult06@gmail.com · 📱 WhatsApp +33 7 49 31 79 15</p>
+</footer>
+
+<script>
+/* ── CANVAS PARTICLES ── */
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+let W, H, particles = [];
+
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+const COLORS = ['#5b8dee','#8b5cf6','#06b6d4','#10b981'];
+
+for (let i = 0; i < 60; i++) {
+  particles.push({
+    x: Math.random() * window.innerWidth,
+    y: Math.random() * window.innerHeight,
+    r: Math.random() * 1.5 + .5,
+    vx: (Math.random() - .5) * .3,
+    vy: (Math.random() - .5) * .3,
+    color: COLORS[Math.floor(Math.random() * COLORS.length)],
+    alpha: Math.random() * .5 + .2
+  });
+}
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+  particles.forEach(p => {
+    p.x += p.vx; p.y += p.vy;
+    if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
+    if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fillStyle = p.color;
+    ctx.globalAlpha = p.alpha;
+    ctx.fill();
+  });
+  // Lines between close particles
+  ctx.globalAlpha = 1;
+  for (let i = 0; i < particles.length; i++) {
+    for (let j = i + 1; j < particles.length; j++) {
+      const dx = particles[i].x - particles[j].x;
+      const dy = particles[i].y - particles[j].y;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist < 120) {
+        ctx.beginPath();
+        ctx.moveTo(particles[i].x, particles[i].y);
+        ctx.lineTo(particles[j].x, particles[j].y);
+        ctx.strokeStyle = '#5b8dee';
+        ctx.globalAlpha = (1 - dist / 120) * .08;
+        ctx.lineWidth = .8;
+        ctx.stroke();
+      }
+    }
+  }
+  ctx.globalAlpha = 1;
+  requestAnimationFrame(draw);
+}
+draw();
+
+/* ── FORM ── */
+document.getElementById('contactForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const btn = this.querySelector('.form-submit');
+  btn.textContent = 'Envoi en cours...';
+  btn.disabled = true;
+  try {
+    const res = await fetch(this.action, {
+      method: 'POST',
+      body: new FormData(this),
+      headers: { 'Accept': 'application/json' }
+    });
+    if (res.ok) {
+      this.style.display = 'none';
+      document.getElementById('formSuccess').style.display = 'block';
+    } else {
+      btn.textContent = '❌ Erreur — réessayez';
+      btn.disabled = false;
+    }
+  } catch {
+    btn.textContent = '❌ Erreur — réessayez';
+    btn.disabled = false;
+  }
+});
+</script>
+</body>
+</html>
